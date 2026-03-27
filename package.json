@@ -1,0 +1,7 @@
+{
+  "name": "ai-customer-support-copilot-saas",
+  "private": true,
+  "scripts": {
+    "dev": "echo Run client and server from their own folders"
+  }
+}
