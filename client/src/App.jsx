@@ -11,14 +11,18 @@ import {
   setSelectedTicket,
   updateTicketStatus
 } from "./store";
+import { CopilotPanel } from "./components/CopilotPanel";
+import { KnowledgeBase } from "./components/KnowledgeBase";
+import { TicketDetail } from "./components/TicketDetail";
+import { TicketInbox } from "./components/TicketInbox";
+import { WorkspaceHeader } from "./components/WorkspaceHeader";
 
-function StatusBadge({ status }) {
-  const map = {
-    Open: "danger",
-    Pending: "warning",
-    Resolved: "success"
-  };
-  return <span className={`badge text-bg-${map[status] || "secondary"}`}>{status}</span>;
+function getSuggestedPlaybook(ticket) {
+  if (!ticket) return "Select a ticket to see the recommended handling path.";
+  if (ticket.status === "Resolved") return "Confirm closure and log the customer-facing resolution.";
+  if (ticket.status === "Pending") return "Keep the response concise and ask for the exact confirmation needed.";
+  if (ticket.priority === "High") return "Reply in the current shift and lead with the fastest recovery step.";
+  return "Acknowledge the issue, give the next action, and set the follow-up expectation.";
 }
 
 export default function App() {
@@ -35,7 +39,9 @@ export default function App() {
     error
   } = useSelector((state) => state.app);
 
-  const [message, setMessage] = useState("Draft a reply that acknowledges the issue and gives the next best troubleshooting step.");
+  const [message, setMessage] = useState(
+    "Draft a reply that acknowledges the issue, gives the best next troubleshooting step, and sets expectations clearly."
+  );
 
   useEffect(() => {
     dispatch(fetchTenants());
@@ -59,177 +65,95 @@ export default function App() {
     [tickets, selectedTicketId]
   );
 
+  const selectedTenant = useMemo(
+    () => tenants.find((tenant) => tenant.id === selectedTenantId) ?? null,
+    [tenants, selectedTenantId]
+  );
+
+  const workspaceStats = useMemo(() => {
+    const openCount = tickets.filter((ticket) => ticket.status === "Open").length;
+    const pendingCount = tickets.filter((ticket) => ticket.status === "Pending").length;
+    const resolvedCount = tickets.filter((ticket) => ticket.status === "Resolved").length;
+
+    return [
+      {
+        label: "Queue",
+        value: String(tickets.length).padStart(2, "0"),
+        note: "live tickets"
+      },
+      {
+        label: "Attention",
+        value: String(openCount).padStart(2, "0"),
+        note: "still open"
+      },
+      {
+        label: "Waiting",
+        value: String(pendingCount).padStart(2, "0"),
+        note: "customer follow-up"
+      },
+      {
+        label: "Resolved",
+        value: String(resolvedCount).padStart(2, "0"),
+        note: "cleared"
+      }
+    ];
+  }, [tickets]);
+
   return (
-    <div className="container-fluid py-4 bg-light min-vh-100">
-      <div className="row g-4">
-        <div className="col-12">
-          <div className="d-flex flex-wrap align-items-center justify-content-between bg-white rounded shadow-sm p-3">
-            <div>
-              <h1 className="h3 mb-1">AI Customer Support Copilot SaaS</h1>
-              <p className="text-muted mb-0">React + Redux + Node + SQL + AI draft generation</p>
-            </div>
-            <div className="d-flex align-items-center gap-2">
-              <label className="form-label mb-0">Tenant</label>
-              <select
-                className="form-select"
-                style={{ width: 240 }}
-                value={selectedTenantId}
-                onChange={(e) => dispatch(setSelectedTenant(e.target.value))}
-              >
-                {tenants.map((tenant) => (
-                  <option key={tenant.id} value={tenant.id}>
-                    {tenant.name} · {tenant.plan}
-                  </option>
-                ))}
-              </select>
-            </div>
+    <div className="app-shell">
+      <div className="app-backdrop" />
+
+      <main className="workspace-shell">
+        <WorkspaceHeader
+          selectedTenant={selectedTenant}
+          selectedTenantId={selectedTenantId}
+          tenants={tenants}
+          stats={workspaceStats}
+          onTenantChange={(tenantId) => dispatch(setSelectedTenant(tenantId))}
+        />
+
+        <div className="workspace-grid">
+          <TicketInbox
+            tickets={tickets}
+            selectedTicketId={selectedTicketId}
+            onSelectTicket={(ticketId) => dispatch(setSelectedTicket(ticketId))}
+          />
+
+          <div className="workspace-main">
+            <TicketDetail
+              ticket={selectedTicket}
+              historyCount={history.length}
+              suggestedPlaybook={getSuggestedPlaybook(selectedTicket)}
+              onUpdateStatus={(status) =>
+                dispatch(updateTicketStatus({ ticketId: selectedTicket.id, status }))
+              }
+            />
+            <KnowledgeBase docs={docs} selectedTicket={selectedTicket} />
           </div>
+
+          <CopilotPanel
+            message={message}
+            setMessage={setMessage}
+            selectedTicket={selectedTicket}
+            selectedTenant={selectedTenant}
+            selectedTenantId={selectedTenantId}
+            loadingDraft={loadingDraft}
+            aiDraft={aiDraft}
+            history={history}
+            error={error}
+            onGenerate={() =>
+              dispatch(
+                sendCopilotMessage({
+                  tenantId: selectedTenantId,
+                  ticketId: selectedTicketId,
+                  message
+                })
+              )
+            }
+            onClearError={() => dispatch(clearError())}
+          />
         </div>
-
-        <div className="col-lg-3">
-          <div className="card shadow-sm h-100">
-            <div className="card-header bg-white">
-              <strong>Ticket Inbox</strong>
-            </div>
-            <div className="list-group list-group-flush">
-              {tickets.map((ticket) => (
-                <button
-                  key={ticket.id}
-                  className={`list-group-item list-group-item-action ${selectedTicketId === ticket.id ? "active" : ""}`}
-                  onClick={() => dispatch(setSelectedTicket(ticket.id))}
-                >
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div className="text-start">
-                      <div className="fw-semibold">#{ticket.id} {ticket.subject}</div>
-                      <small>{ticket.customer_name}</small>
-                    </div>
-                    <StatusBadge status={ticket.status} />
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-5">
-          <div className="card shadow-sm mb-4">
-            <div className="card-header bg-white d-flex justify-content-between align-items-center">
-              <strong>Selected Ticket</strong>
-              {selectedTicket && <StatusBadge status={selectedTicket.status} />}
-            </div>
-            <div className="card-body">
-              {selectedTicket ? (
-                <>
-                  <h2 className="h5">{selectedTicket.subject}</h2>
-                  <p className="mb-2"><strong>Customer:</strong> {selectedTicket.customer_name}</p>
-                  <p className="mb-2"><strong>Priority:</strong> {selectedTicket.priority}</p>
-                  <p className="mb-3">{selectedTicket.details}</p>
-                  <div className="d-flex gap-2">
-                    {["Open", "Pending", "Resolved"].map((status) => (
-                      <button
-                        key={status}
-                        className="btn btn-outline-primary btn-sm"
-                        onClick={() => dispatch(updateTicketStatus({ ticketId: selectedTicket.id, status }))}
-                      >
-                        Mark {status}
-                      </button>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <p className="text-muted mb-0">Select a ticket.</p>
-              )}
-            </div>
-          </div>
-
-          <div className="card shadow-sm">
-            <div className="card-header bg-white">
-              <strong>Knowledge Base</strong>
-            </div>
-            <div className="card-body">
-              <div className="row g-3">
-                {docs.map((doc) => (
-                  <div key={doc.id} className="col-12">
-                    <div className="border rounded p-3">
-                      <div className="fw-semibold">{doc.title}</div>
-                      <div className="small text-muted mb-2">{doc.tags}</div>
-                      <div>{doc.body}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-lg-4">
-          <div className="card shadow-sm mb-4">
-            <div className="card-header bg-white">
-              <strong>Copilot Prompt</strong>
-            </div>
-            <div className="card-body">
-              <textarea
-                className="form-control mb-3"
-                rows="5"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <button
-                className="btn btn-primary"
-                disabled={!selectedTicketId || loadingDraft}
-                onClick={() =>
-                  dispatch(
-                    sendCopilotMessage({
-                      tenantId: selectedTenantId,
-                      ticketId: selectedTicketId,
-                      message
-                    })
-                  )
-                }
-              >
-                {loadingDraft ? "Generating..." : "Generate Support Draft"}
-              </button>
-              {error && (
-                <div className="alert alert-danger mt-3 d-flex justify-content-between align-items-center">
-                  <span>{error}</span>
-                  <button className="btn btn-sm btn-light" onClick={() => dispatch(clearError())}>
-                    Clear
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="card shadow-sm mb-4">
-            <div className="card-header bg-white">
-              <strong>AI Draft</strong>
-            </div>
-            <div className="card-body">
-              <pre className="mb-0" style={{ whiteSpace: "pre-wrap", fontFamily: "inherit" }}>
-                {aiDraft || "Generate a reply draft to see AI output."}
-              </pre>
-            </div>
-          </div>
-
-          <div className="card shadow-sm">
-            <div className="card-header bg-white">
-              <strong>Chat History</strong>
-            </div>
-            <div className="card-body">
-              {history.length ? (
-                history.map((entry) => (
-                  <div key={`${entry.id}-${entry.created_at}`} className="border rounded p-2 mb-2">
-                    <div className="small text-uppercase text-muted">{entry.role}</div>
-                    <div>{entry.content}</div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-muted mb-0">No history yet.</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }

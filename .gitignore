@@ -3,3 +3,5 @@ dist
 .env
 data/*.sqlite
 data/*.bin
+server/data/*.sqlite
+server/data/*.bin

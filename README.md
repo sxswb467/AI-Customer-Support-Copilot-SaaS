@@ -2,7 +2,7 @@
 
 A locally testable demo SaaS app that shows:
 - React + Redux Toolkit state management
-- Bootstrap dashboard UI
+- Custom support operations workspace UI
 - Node.js / Express API design
 - SQL-based data modeling with SQL.js
 - AI-assisted reply generation with optional OpenAI support
@@ -39,6 +39,13 @@ npm run dev
 ```
 
 Frontend runs at `http://localhost:5173`.
+
+If you are opening the app from a host browser outside WSL, use:
+
+```bash
+cd client
+npm run dev:host
+```
 
 ## Optional real AI mode
 
