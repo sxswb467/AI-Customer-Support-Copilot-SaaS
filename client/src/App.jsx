@@ -16,6 +16,10 @@ import { KnowledgeBase } from "./components/KnowledgeBase";
 import { TicketDetail } from "./components/TicketDetail";
 import { TicketInbox } from "./components/TicketInbox";
 import { WorkspaceHeader } from "./components/WorkspaceHeader";
+import {
+  buildDraftPresentation,
+  getTenantShowcase
+} from "./demoPresentation";
 
 function getSuggestedPlaybook(ticket) {
   if (!ticket) return "Select a ticket to see the recommended handling path.";
@@ -42,10 +46,23 @@ export default function App() {
   const [message, setMessage] = useState(
     "Draft a reply that acknowledges the issue, gives the best next troubleshooting step, and sets expectations clearly."
   );
+  const searchParams = useMemo(
+    () => new URLSearchParams(window.location.search),
+    []
+  );
+  const urlTenantId = Number(searchParams.get("tenant")) || null;
+  const urlTicketId = Number(searchParams.get("ticket")) || null;
+  const demoMode = searchParams.get("demo") || "";
 
   useEffect(() => {
     dispatch(fetchTenants());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (urlTenantId && urlTenantId !== selectedTenantId) {
+      dispatch(setSelectedTenant(urlTenantId));
+    }
+  }, [dispatch, selectedTenantId, urlTenantId]);
 
   useEffect(() => {
     if (selectedTenantId) {
@@ -64,6 +81,16 @@ export default function App() {
     () => tickets.find((ticket) => ticket.id === selectedTicketId),
     [tickets, selectedTicketId]
   );
+
+  useEffect(() => {
+    if (!urlTicketId || !tickets.some((ticket) => ticket.id === urlTicketId)) {
+      return;
+    }
+
+    if (selectedTicketId !== urlTicketId) {
+      dispatch(setSelectedTicket(urlTicketId));
+    }
+  }, [dispatch, selectedTicketId, tickets, urlTicketId]);
 
   const selectedTenant = useMemo(
     () => tenants.find((tenant) => tenant.id === selectedTenantId) ?? null,
@@ -99,6 +126,25 @@ export default function App() {
     ];
   }, [tickets]);
 
+  const tenantShowcase = useMemo(
+    () => getTenantShowcase(selectedTenant),
+    [selectedTenant]
+  );
+
+  const draftPresentation = useMemo(
+    () =>
+      buildDraftPresentation({
+        aiDraft: demoMode === "showcase" && !aiDraft ? "" : aiDraft,
+        ticket: selectedTicket,
+        history,
+        kbDocs: docs
+      }),
+    [aiDraft, demoMode, docs, history, selectedTicket]
+  );
+
+  const displayedDraft =
+    demoMode === "showcase" && !aiDraft ? draftPresentation.source : aiDraft;
+
   return (
     <div className="app-shell">
       <div className="app-backdrop" />
@@ -109,6 +155,7 @@ export default function App() {
           selectedTenantId={selectedTenantId}
           tenants={tenants}
           stats={workspaceStats}
+          showcase={tenantShowcase}
           onTenantChange={(tenantId) => dispatch(setSelectedTenant(tenantId))}
         />
 
@@ -124,6 +171,7 @@ export default function App() {
               ticket={selectedTicket}
               historyCount={history.length}
               suggestedPlaybook={getSuggestedPlaybook(selectedTicket)}
+              draftSummary={draftPresentation.summary}
               onUpdateStatus={(status) =>
                 dispatch(updateTicketStatus({ ticketId: selectedTicket.id, status }))
               }
@@ -138,7 +186,8 @@ export default function App() {
             selectedTenant={selectedTenant}
             selectedTenantId={selectedTenantId}
             loadingDraft={loadingDraft}
-            aiDraft={aiDraft}
+            aiDraft={displayedDraft}
+            draftPresentation={draftPresentation}
             history={history}
             error={error}
             onGenerate={() =>

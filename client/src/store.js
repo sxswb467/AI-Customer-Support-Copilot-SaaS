@@ -1,6 +1,9 @@
 import { configureStore, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const API = "http://localhost:4000/api";
+const browserHost =
+  typeof window !== "undefined" ? window.location.hostname || "localhost" : "localhost";
+const API =
+  import.meta.env.VITE_API_BASE_URL || `http://${browserHost}:4000/api`;
 
 export const fetchTenants = createAsyncThunk("app/fetchTenants", async () => {
   const res = await fetch(`${API}/tenants`);

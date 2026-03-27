@@ -7,6 +7,20 @@ A locally testable demo SaaS app that shows:
 - SQL-based data modeling with SQL.js
 - AI-assisted reply generation with optional OpenAI support
 
+## Screenshots
+
+### Operations overview
+
+![Operations overview](docs/screenshots/hero-overview.png)
+
+### Copilot draft workflow
+
+![Copilot draft workflow](docs/screenshots/draft-tall.png)
+
+### Tenant variation
+
+![Tenant variation](docs/screenshots/learning-overview.png)
+
 ## Features
 
 - Multi-tenant demo accounts
@@ -47,6 +61,18 @@ cd client
 npm run dev:host
 ```
 
+If port `4000` is already in use, point the frontend at a different backend:
+
+```bash
+cd server
+PORT=4400 npm run dev
+```
+
+```bash
+cd client
+VITE_API_BASE_URL=http://172.31.221.39:4400/api npm run dev:host
+```
+
 ## Optional real AI mode
 
 Edit `server/.env`:
@@ -65,3 +91,15 @@ If no key is present, the app stays in mock mode and still works fully.
 3. Review knowledge base context
 4. Ask the copilot for a draft reply
 5. Update ticket status
+
+## Showcase mode
+
+For static portfolio screenshots or demo states, the frontend also supports query
+parameters:
+
+- `?tenant=1&ticket=102`
+- `?tenant=1&ticket=101&demo=showcase`
+- `?tenant=2&ticket=201&demo=showcase`
+
+The Windows capture helper used for README screenshots lives at
+`scripts/capture_demo_screenshot.ps1`.

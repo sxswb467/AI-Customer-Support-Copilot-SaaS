@@ -14,6 +14,7 @@ export function CopilotPanel({
   selectedTenantId,
   loadingDraft,
   aiDraft,
+  draftPresentation,
   history,
   error,
   onGenerate,
@@ -83,7 +84,7 @@ export function CopilotPanel({
         <div className="section-heading">
           <div>
             <span className="section-kicker">Output</span>
-            <h2>AI draft</h2>
+            <h2>AI brief</h2>
           </div>
         </div>
 
@@ -92,9 +93,48 @@ export function CopilotPanel({
           <span>{history.length} conversation items</span>
         </div>
 
-        <pre className="draft-output">
-          {aiDraft || "Generate a reply to see the support draft and internal next steps."}
-        </pre>
+        {loadingDraft ? (
+          <div className="draft-skeleton" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        ) : (
+          <>
+            <div className="draft-stack">
+              <article className="draft-card draft-card-primary">
+                <span className="draft-label">Customer-facing reply</span>
+                <p>{draftPresentation.customerReply || "Generate a reply to see the staged draft."}</p>
+              </article>
+
+              <article className="draft-card">
+                <div className="draft-card-top">
+                  <span className="draft-label">Internal next steps</span>
+                  <span className="confidence-pill">{draftPresentation.confidence}% confidence</span>
+                </div>
+                <ul className="draft-list">
+                  {draftPresentation.internalSteps.length ? (
+                    draftPresentation.internalSteps.map((step) => <li key={step}>{step}</li>)
+                  ) : (
+                    <li>Generate a reply to populate internal follow-up guidance.</li>
+                  )}
+                </ul>
+              </article>
+
+              <article className="draft-card">
+                <span className="draft-label">Escalation guidance</span>
+                <p>{draftPresentation.escalation}</p>
+              </article>
+            </div>
+
+            <details className="draft-source">
+              <summary>View raw draft text</summary>
+              <pre className="draft-output">
+                {aiDraft || "Generate a reply to see the support draft and internal next steps."}
+              </pre>
+            </details>
+          </>
+        )}
       </section>
 
       <section className="history-panel panel-surface">

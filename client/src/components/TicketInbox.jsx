@@ -1,4 +1,5 @@
 import { StatusBadge } from "./StatusBadge";
+import { getTicketSignal } from "../demoPresentation";
 
 function formatAge(createdAt) {
   const created = new Date(createdAt);
@@ -40,8 +41,9 @@ export function TicketInbox({ tickets, selectedTicketId, onSelectTicket }) {
 
       <div className="ticket-list">
         {tickets.length ? (
-          tickets.map((ticket) => {
+          tickets.map((ticket, index) => {
             const isSelected = selectedTicketId === ticket.id;
+            const signal = getTicketSignal(ticket, index);
 
             return (
               <button
@@ -51,15 +53,26 @@ export function TicketInbox({ tickets, selectedTicketId, onSelectTicket }) {
                 type="button"
               >
                 <div className="ticket-row-top">
-                  <span className="ticket-id">#{ticket.id}</span>
+                  <div className="ticket-row-identity">
+                    <span className="ticket-avatar">{signal.initials}</span>
+                    <span className="ticket-id">#{ticket.id}</span>
+                  </div>
                   <StatusBadge status={ticket.status} />
                 </div>
                 <strong>{ticket.subject}</strong>
                 <div className="ticket-row-meta">
                   <span>{ticket.customer_name}</span>
-                  <span>{ticket.priority} priority</span>
+                  <span>{signal.channel}</span>
+                </div>
+                <div className="ticket-chip-row">
+                  <span className="signal-chip">{signal.aiAssist}</span>
+                  <span className="signal-chip">{signal.escalationRisk}</span>
+                  <span className="signal-chip">{signal.urgency} priority</span>
                 </div>
                 <div className="ticket-row-age">{formatAge(ticket.created_at)}</div>
+                {signal.unreadCount ? (
+                  <div className="ticket-unread">{signal.unreadCount} unread customer updates</div>
+                ) : null}
               </button>
             );
           })

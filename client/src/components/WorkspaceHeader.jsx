@@ -3,6 +3,7 @@ export function WorkspaceHeader({
   selectedTenantId,
   tenants,
   stats,
+  showcase,
   onTenantChange
 }) {
   return (
@@ -10,10 +11,11 @@ export function WorkspaceHeader({
       <div className="header-copy">
         <div className="eyebrow">Support operations</div>
         <h1>AI Customer Support Copilot</h1>
-        <p>
-          Triage tickets, pull the right knowledge, and generate clean replies from a
-          single operator view.
-        </p>
+        <p>{showcase.subhead}</p>
+        <div className="hero-callout">
+          <strong>{showcase.headline}</strong>
+          <span>{showcase.syncStatus}</span>
+        </div>
       </div>
 
       <div className="header-controls">
@@ -44,6 +46,16 @@ export function WorkspaceHeader({
             <span>{stat.label}</span>
             <strong>{stat.value}</strong>
             <small>{stat.note}</small>
+          </div>
+        ))}
+      </div>
+
+      <div className="showcase-strip">
+        {showcase.stats.map((item) => (
+          <div key={item.label} className="showcase-card">
+            <span>{item.label}</span>
+            <strong>{item.value}</strong>
+            <small>{item.note}</small>
           </div>
         ))}
       </div>

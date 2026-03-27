@@ -99,10 +99,30 @@ textarea {
   letter-spacing: -0.06em;
 }
 
+.hero-callout {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  border: 1px solid rgba(125, 211, 199, 0.16);
+  background:
+    linear-gradient(180deg, rgba(125, 211, 199, 0.1), rgba(125, 211, 199, 0.03)),
+    rgba(255, 255, 255, 0.02);
+}
+
+.hero-callout strong {
+  font-family: "Sora", sans-serif;
+  font-size: 1.12rem;
+  letter-spacing: -0.03em;
+}
+
 .header-copy p,
 .section-heading p,
 .composer-copy,
 .detail-summary,
+.hero-callout span,
 .history-entry p,
 .kb-article p,
 .empty-state p {
@@ -197,6 +217,13 @@ textarea {
   gap: 12px;
 }
 
+.showcase-strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .stat-tile {
   padding: 18px;
   border-radius: 22px;
@@ -232,6 +259,32 @@ textarea {
 
 .stat-tile small {
   color: rgba(237, 243, 255, 0.75);
+}
+
+.showcase-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 184, 77, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 184, 77, 0.08), rgba(255, 184, 77, 0.02)),
+    rgba(255, 255, 255, 0.02);
+}
+
+.showcase-card span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.showcase-card strong {
+  display: block;
+  margin: 8px 0 6px;
+  font-family: "Sora", sans-serif;
+  font-size: 1.7rem;
+  letter-spacing: -0.05em;
+}
+
+.showcase-card small {
+  color: rgba(237, 243, 255, 0.72);
 }
 
 .workspace-grid {
@@ -365,6 +418,26 @@ textarea {
   margin-bottom: 10px;
 }
 
+.ticket-row-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticket-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(125, 211, 199, 0.12);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
 .ticket-id {
   color: rgba(237, 243, 255, 0.72);
   font-weight: 700;
@@ -384,6 +457,33 @@ textarea {
 
 .ticket-row-age {
   margin-top: 12px;
+}
+
+.ticket-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.signal-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(237, 243, 255, 0.82);
+  font-size: 0.74rem;
+}
+
+.ticket-unread {
+  margin-top: 10px;
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .status-badge {
@@ -468,6 +568,11 @@ textarea {
   margin: 0;
   color: rgba(237, 243, 255, 0.85);
   line-height: 1.7;
+}
+
+.detail-note-secondary {
+  border-color: rgba(125, 211, 199, 0.16);
+  background: linear-gradient(180deg, rgba(125, 211, 199, 0.08), rgba(125, 211, 199, 0.02));
 }
 
 .action-strip {
@@ -560,6 +665,32 @@ textarea {
   align-items: center;
   padding: 7px 10px;
   font-size: 0.76rem;
+}
+
+.tag-chip-accent {
+  border-color: rgba(125, 211, 199, 0.22);
+  background: rgba(125, 211, 199, 0.08);
+  color: var(--accent);
+}
+
+.kb-action-line {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.kb-action-line span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kb-action-line strong {
+  font-size: 0.96rem;
+  line-height: 1.6;
 }
 
 .copilot-composer {
@@ -661,6 +792,97 @@ textarea {
   line-height: 1.7;
 }
 
+.draft-stack {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.draft-card {
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.draft-card-primary {
+  background:
+    linear-gradient(180deg, rgba(125, 211, 199, 0.08), rgba(125, 211, 199, 0.02)),
+    rgba(255, 255, 255, 0.03);
+}
+
+.draft-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.draft-label {
+  display: inline-flex;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.draft-card p {
+  margin: 12px 0 0;
+  color: rgba(237, 243, 255, 0.88);
+  line-height: 1.7;
+}
+
+.draft-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: rgba(237, 243, 255, 0.88);
+}
+
+.draft-list li + li {
+  margin-top: 10px;
+}
+
+.confidence-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 184, 77, 0.12);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.draft-source {
+  margin-top: 14px;
+}
+
+.draft-source summary {
+  color: var(--muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.draft-source summary::-webkit-details-marker {
+  display: none;
+}
+
+.draft-skeleton {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.draft-skeleton span {
+  height: 74px;
+  border-radius: 22px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(125, 211, 199, 0.12), rgba(255, 255, 255, 0.03));
+  background-size: 200% 100%;
+  animation: shimmer 1.8s linear infinite;
+}
+
 .draft-meta {
   display: flex;
   justify-content: space-between;
@@ -713,6 +935,16 @@ textarea {
   }
 }
 
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
 @media (max-width: 1200px) {
   .workspace-grid {
     grid-template-columns: 280px minmax(0, 1fr);
@@ -744,6 +976,7 @@ textarea {
   }
 
   .header-stats,
+  .showcase-strip,
   .detail-metrics,
   .copilot-rail {
     grid-template-columns: 1fr 1fr;
@@ -768,6 +1001,7 @@ textarea {
   }
 
   .header-stats,
+  .showcase-strip,
   .detail-metrics,
   .copilot-rail,
   .rail-summary {
@@ -779,7 +1013,8 @@ textarea {
   .context-line,
   .ticket-row-meta,
   .draft-meta,
-  .kb-article-header {
+  .kb-article-header,
+  .draft-card-top {
     display: grid;
     gap: 10px;
   }

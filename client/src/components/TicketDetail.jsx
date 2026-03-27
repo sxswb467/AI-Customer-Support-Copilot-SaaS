@@ -13,7 +13,13 @@ function formatOpenedAt(createdAt) {
   }).format(created);
 }
 
-export function TicketDetail({ ticket, historyCount, suggestedPlaybook, onUpdateStatus }) {
+export function TicketDetail({
+  ticket,
+  historyCount,
+  suggestedPlaybook,
+  draftSummary,
+  onUpdateStatus
+}) {
   if (!ticket) {
     return (
       <section className="detail-panel panel-surface">
@@ -65,6 +71,11 @@ export function TicketDetail({ ticket, historyCount, suggestedPlaybook, onUpdate
       <div className="detail-note">
         <span className="detail-note-label">Operator brief</span>
         <p>{suggestedPlaybook}</p>
+      </div>
+
+      <div className="detail-note detail-note-secondary">
+        <span className="detail-note-label">Copilot recommendation</span>
+        <p>{draftSummary}</p>
       </div>
 
       <div className="action-strip">
