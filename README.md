@@ -1,10 +1,12 @@
 # AI Customer Support Copilot SaaS
 
-A locally testable demo SaaS app that shows:
-- React + Redux Toolkit state management
-- Custom support operations workspace UI
-- Node.js / Express API design
-- SQL-based data modeling with SQL.js
+I built this project as a portfolio-ready demo of an AI-assisted customer support workspace. The goal was to make it feel less like a toy chatbot and more like a real internal product: multi-tenant, operationally clear, and grounded in the daily flow of handling tickets, reviewing knowledge base context, and drafting thoughtful replies.
+
+At a technical level, it brings together:
+- React + Redux Toolkit on the frontend
+- A custom support operations workspace UI
+- Node.js + Express on the backend
+- SQL.js for lightweight relational data modeling
 - AI-assisted reply generation with optional OpenAI support
 
 ## Screenshots
@@ -23,12 +25,12 @@ A locally testable demo SaaS app that shows:
 
 ## Features
 
-- Multi-tenant demo accounts
-- Ticket inbox with status updates
-- Knowledge base articles
-- AI support copilot panel
-- Chat history per ticket
-- Mock AI mode by default
+- Multi-tenant demo accounts with distinct support contexts
+- Ticket inbox with status management
+- Knowledge base context tied to the active tenant
+- AI copilot panel for drafting customer replies
+- Per-ticket conversation history
+- Mock AI mode by default for local testing
 - Real OpenAI mode when `OPENAI_API_KEY` is provided
 
 ## Run locally
@@ -84,12 +86,16 @@ OPENAI_MODEL=gpt-5.4-mini
 
 If no key is present, the app stays in mock mode and still works fully.
 
+This makes it easy to use the project in two ways:
+- as a fully local portfolio demo with deterministic mock responses
+- as a lightweight real-AI prototype backed by OpenAI
+
 ## Demo flow
 
 1. Select a tenant
 2. Click any ticket
-3. Review knowledge base context
-4. Ask the copilot for a draft reply
+3. Review the ticket details and knowledge base context
+4. Ask the copilot for a reply draft
 5. Update ticket status
 
 ## Showcase mode
