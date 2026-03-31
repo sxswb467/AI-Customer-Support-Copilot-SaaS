@@ -1,6 +1,8 @@
 # AI Customer Support Copilot SaaS
 
-I built this project as a portfolio-ready demo of an AI-assisted customer support workspace. The goal was to make it feel less like a toy chatbot and more like a real internal product: multi-tenant, operationally clear, and grounded in the daily flow of handling tickets, reviewing knowledge base context, and drafting thoughtful replies.
+AI Customer Support Copilot is an AI-driven customer support workspace designed to help teams manage tickets, reference internal knowledge, and draft clear, context-aware responses with greater speed and consistency.
+
+From a developer standpoint, it is a multi-tenant SaaS demo that brings together operational workflow design, tenant-aware data modeling, and AI-assisted response generation in a product experience that feels structured, practical, and presentation-ready.
 
 At a technical level, it brings together:
 - React + Redux Toolkit on the frontend
