@@ -40,13 +40,12 @@ This type of system is useful for:
 
 The system is structured as a lightweight support operations stack:
 
-Frontend (React + Redux Toolkit)
-  ↓
-API layer (Node.js + Express)
-  ↓
-Processing layer (ticket workflow, tenant context, AI reply generation)
-  ↓
-Storage (SQL.js)
+```mermaid
+flowchart TD
+    A["Frontend (React + Redux Toolkit)"] --> B["API layer (Node.js + Express)"]
+    B --> C["Processing layer (ticket workflow, tenant context, AI reply generation)"]
+    C --> D["Storage (SQL.js)"]
+```
 
 AI responses can run in:
 
