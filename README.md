@@ -1,15 +1,31 @@
 # AI Customer Support Copilot SaaS
 
-AI Customer Support Copilot is an AI-driven customer support workspace designed to help teams manage tickets, reference internal knowledge, and draft clear, context-aware responses with greater speed and consistency.
+AI Customer Support Copilot is a production-style support workspace designed to show how an AI assistant can fit into a real customer operations workflow. The experience combines ticket management, tenant-aware context, knowledge retrieval, and draft generation in a way that feels practical for a SaaS support team.
 
-From a developer standpoint, it is a multi-tenant SaaS demo that brings together operational workflow design, tenant-aware data modeling, and AI-assisted response generation in a product experience that feels structured, practical, and presentation-ready.
+## What this project demonstrates
 
-At a technical level, it brings together:
-- React + Redux Toolkit on the frontend
-- A custom support operations workspace UI
-- Node.js + Express on the backend
-- SQL.js for lightweight relational data modeling
-- AI-assisted reply generation with optional OpenAI support
+- AI-assisted reply drafting grounded in support context
+- Multi-tenant SaaS workflow design for shared support teams
+- Clear operational UI for triage, ticket review, and response preparation
+- Full-stack architecture that supports both mock mode and live AI integration
+
+## Use case
+
+This type of system is commonly used for:
+
+- SaaS customer support platforms
+- Internal agent-assist tooling for support teams
+- Help desk modernization initiatives
+- Knowledge-grounded response workflows for B2B service teams
+
+## Key capabilities
+
+- Ticket inbox with status management and conversation history
+- Tenant-specific knowledge context tied to the active workspace
+- AI copilot panel for generating suggested customer replies
+- Demo accounts with distinct support scenarios
+- Mock AI mode for portfolio review without external credentials
+- Optional OpenAI mode for live model-backed responses
 
 ## Screenshots
 
@@ -25,19 +41,17 @@ At a technical level, it brings together:
 
 ![Tenant variation](docs/screenshots/learning-overview.png)
 
-## Features
+## Technology snapshot
 
-- Multi-tenant demo accounts with distinct support contexts
-- Ticket inbox with status management
-- Knowledge base context tied to the active tenant
-- AI copilot panel for drafting customer replies
-- Per-ticket conversation history
-- Mock AI mode by default for local testing
-- Real OpenAI mode when `OPENAI_API_KEY` is provided
+- React + Redux Toolkit frontend
+- Node.js + Express backend
+- SQL.js for lightweight relational storage
+- Optional OpenAI integration for live AI output
 
 ## Run locally
 
 ### Backend
+
 ```bash
 cd server
 cp .env.example .env
@@ -48,6 +62,7 @@ npm run dev
 Backend runs at `http://localhost:4000`.
 
 ### Frontend
+
 Open a new terminal:
 
 ```bash
@@ -89,25 +104,24 @@ OPENAI_MODEL=gpt-5.4-mini
 If no key is present, the app stays in mock mode and still works fully.
 
 This makes it easy to use the project in two ways:
-- as a fully local portfolio demo with deterministic mock responses
-- as a lightweight real-AI prototype backed by OpenAI
+
+- As a fully local portfolio demo with deterministic mock responses
+- As a lightweight live-AI prototype backed by OpenAI
 
 ## Demo flow
 
-1. Select a tenant
-2. Click any ticket
-3. Review the ticket details and knowledge base context
-4. Ask the copilot for a reply draft
-5. Update ticket status
+1. Select a tenant.
+2. Click any ticket.
+3. Review the ticket details and knowledge base context.
+4. Ask the copilot for a reply draft.
+5. Update ticket status.
 
 ## Showcase mode
 
-For static portfolio screenshots or demo states, the frontend also supports query
-parameters:
+For static portfolio screenshots or demo states, the frontend also supports query parameters:
 
 - `?tenant=1&ticket=102`
 - `?tenant=1&ticket=101&demo=showcase`
 - `?tenant=2&ticket=201&demo=showcase`
 
-The Windows capture helper used for README screenshots lives at
-`scripts/capture_demo_screenshot.ps1`.
+The Windows capture helper used for README screenshots lives at `scripts/capture_demo_screenshot.ps1`.
