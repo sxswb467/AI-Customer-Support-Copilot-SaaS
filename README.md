@@ -18,6 +18,15 @@ This type of system is commonly used for:
 - Help desk modernization initiatives
 - Knowledge-grounded response workflows for B2B service teams
 
+## Why this matters
+
+This type of system is useful for:
+
+- Support teams that need faster response drafting without losing context
+- SaaS products that want AI assistance embedded into operational workflows
+- Service organizations trying to standardize reply quality across agents
+- Internal tools that combine knowledge retrieval with workflow automation
+
 ## Key capabilities
 
 - Ticket inbox with status management and conversation history
@@ -26,6 +35,23 @@ This type of system is commonly used for:
 - Demo accounts with distinct support scenarios
 - Mock AI mode for portfolio review without external credentials
 - Optional OpenAI mode for live model-backed responses
+
+## Architecture overview
+
+The system is structured as a lightweight support operations stack:
+
+Frontend (React + Redux Toolkit)
+  ↓
+API layer (Node.js + Express)
+  ↓
+Processing layer (ticket workflow, tenant context, AI reply generation)
+  ↓
+Storage (SQL.js)
+
+AI responses can run in:
+
+- Mock mode for deterministic local demos
+- Live mode through OpenAI when credentials are provided
 
 ## Screenshots
 
